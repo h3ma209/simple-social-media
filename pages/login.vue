@@ -3,10 +3,10 @@
 		<v-main>
 			<v-container class="fill-height" fluid>
 				<v-row align="center" justify="center">
-					<v-col cols="12" sm="8" md="8">
+					<v-col cols="12" sm="8" md="5">
 						<v-card light>
 							<v-row>
-								<v-col cols="12" md="8">
+								<v-col>
 									<v-card-text class="mt-5 mb-5 pa-7">
 										<h1
 
@@ -40,20 +40,20 @@
 												:rules="passRules"
 											/>
 										</v-form>
-										<h3 class="text-center mt-4">
+										<h3 class="text-center mt-3">
 											Forgot your password ?
 										</h3>
+										<div class="text-center mt-5">
+											<v-btn
+												rounded
+												color="light-blue "
+												dark
+												:disabled="!valid"
+												@click="validate">
+												Login
+											</v-btn>
+										</div>
 									</v-card-text>
-									<div class="text-center mb-3">
-										<v-btn
-											rounded
-											color="light-blue "
-											dark
-											:disabled="!valid"
-											@click="validate">
-											Login
-										</v-btn>
-									</div>
 								</v-col>
 							</v-row>
 						</v-card>
@@ -88,17 +88,18 @@ import auth from '@/middleware/auth'
 
       methods: {
           validate () {
-              this.$refs.form.validate()
+            this.$refs.form.validate()
+			this.sendInfo()
           },
           async sendInfo () {
               try {
                   const resp = await auth.Login({
-                      email: this.email,
-                      password: this.password
+                    email: this.email,
+                    password: this.password
                   })
                   console.log(resp.data)
               } catch (error) {
-                  console.log(error)
+                console.log(error)
               }
           }
       }
@@ -106,11 +107,5 @@ import auth from '@/middleware/auth'
 </script>
 
 <style scoped>
-.login-page{
-    background: pink;
-    height: 100vh !important;
-    display: grid;
-    place-items: center;
-    grid-template-rows: 1fr 9fr;
-}
+
 </style>

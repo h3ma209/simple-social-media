@@ -1,10 +1,12 @@
+require('dotenv').config()
+
 const express = require('express');
-const bodyParser = require('body-parser');
+
 const cors = require('cors');
 const morgan = require('morgan');
 
 const app = express();
-
+const jwt = require("jsonwebtoken");
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({
@@ -12,49 +14,52 @@ app.use(express.urlencoded({
 }));
 app.use(cors());
 
-custom_data = {
-    '123':{
-        name:"Grey suit",
-        price:"89.99",
-        sizes:['S','M','L',"XL"],
-        img_link:"https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+custom_user_data = [
+    {email:'hema@mail.com',password:'1234567',name:'Hema omer'}
+]
 
-    },
-    '2':{
-        name:"Black suit",
-        price:"49.99",
-        sizes:['S','M','L'],
-        img_link:"https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+custom_posts = [
+  {
+    email:'jim@mail.com',
+    title:'Welcome Jim'
+  },
+  {
+    email:'hema@mail.com',
+    title:'Welcome hema'
+  },
+]
+//TODO tommorow when i wake up i should add refresh token and add AUth headers
 
-    },
-    '3':{
-        name:"Black Shirt",
-        price:"39.99",
-        sizes:['S','M','L',"XL"],
-        img_link:"https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+app.get('/posts', authenticationToken, (req,res)=>{
+  res.json(custom_posts.filter(post => post.email == req.body.email))
+});
 
-    },
-    '4':{
-        name:"White shirt",
-        price:"89.99",
-        sizes:['S','M','L',"XL"],
-        img_link:"https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+app.post('/api/login', (req, res)=>{
+    
+    let email = req.body.email;
+    let password = req.body.password;
+    //console.log(email);
+    //console.log(password);
+    //console.log(req);
+    let creds = {Email: email, Pass:password};
+    
+    const accessToken = jwt.sign(creds, process.env.ACCESS_TOKEN_SECRET);
+    
+    res.json({accessToken:accessToken});
+});
 
-    },
-    '5':{
-        name:"Black jean",
-        price:"82.99",
-        sizes:['S','M','L',"XL"],
-        img_link:"https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+function authenticationToken(req, res, next){
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if(token == null) return res.sendStatus(401);
 
-    },
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
+    if(err) return res.sendStatus(403)
+    req.user = user
+    next()
+  });
 
 }
-
-app.get('/api', (req, res)=>{
-    console.log(req.query.id);
-    res.json(custom_data[req.query.id]);
-});
 
 app.listen(8081);
 

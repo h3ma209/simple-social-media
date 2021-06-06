@@ -2,11 +2,12 @@
 import API from '@/middleware/api'
 
 export default {
-  GetInfo (payload) {
-    return API().get('api', {
-      params: {
-        id: payload.id
-      }
+  Login (payload) {
+    return API().post('api/login', {
+
+        email: payload.email,
+        password: payload.password
+
     })
   }
 }
