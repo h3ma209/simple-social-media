@@ -27,6 +27,7 @@
 												type="text"
 												color="light-blue "
 												:rules="emailRules"
+												value="w@w.com"
 											/>
 
 											<v-text-field
@@ -38,6 +39,7 @@
 												type="password"
 												color="light-blue "
 												:rules="passRules"
+												value="w"
 											/>
 										</v-form>
 										<h3 class="text-center mt-3">
@@ -80,7 +82,7 @@ import auth from '@/middleware/auth'
           password: '',
           passRules: [
               v => !!v || 'Password is required',
-              v => (v && v.length > 6) || 'Password must be longer than 6'
+              v => (v && v.length >= 1) || 'Password must be longer than 1'
 
           ]
 
@@ -97,6 +99,7 @@ import auth from '@/middleware/auth'
                     email: this.email,
                     password: this.password
                   })
+
                   console.log(resp.data)
               } catch (error) {
                 console.log(error)

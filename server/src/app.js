@@ -1,63 +1,128 @@
 require('dotenv').config()
 
 const express = require('express');
-
-const cors = require('cors');
-const morgan = require('morgan');
-
 const app = express();
+const bcrypt = require('bcrypt');
+const passport = require('passport')
+const initializePassport = require("./passport-config");
+
+const flash = require('express-flash');
+const session = require('express-session');
 const jwt = require("jsonwebtoken");
+const morgan = require('morgan');
+const cors = require('cors');
+
+
+
+const users = [
+  {id: '12',email: 'h@h.com', password: 'h', name:'hema'}
+]
+
+initializePassport(
+  passport,
+  email => {return users.find(user=> user.email === email)},
+  id => users.find(user => user.id == id)
+)
+
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({
-  extended: true
+  extended: false 
 }));
-app.use(cors());
+app.use(flash());
+app.use(cors()); 
+app.use(session({
+  secret: 'somesecret',
+  resave: false,
+  saveUninitialized: false,  
+}));
 
-custom_user_data = [
-    {email:'hema@mail.com',password:'1234567',name:'Hema omer'}
-]
 
-custom_posts = [
-  {
-    email:'jim@mail.com',
-    title:'Welcome Jim'
-  },
-  {
-    email:'hema@mail.com',
-    title:'Welcome hema'
-  },
-]
-//TODO tommorow when i wake up i should add refresh token and add AUth headers
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get('/posts', authenticationToken, (req,res)=>{
-  res.json(custom_posts.filter(post => post.email == req.body.email))
-});
 
-app.post('/api/login', (req, res)=>{
-    
-    let email = req.body.email;
-    let password = req.body.password;
-    //console.log(email);
-    //console.log(password);
-    //console.log(req);
-    let creds = {Email: email, Pass:password};
-    
-    const accessToken = jwt.sign(creds, process.env.ACCESS_TOKEN_SECRET);
-    
-    res.json({accessToken:accessToken});
-});
+app.post('/api/authme',(req,res)=>{
+  let username = req.body.name;
+  let access_token = "BEARER "+jwt.sign({name: username}, process.env.ACCESS_TOKEN_SECRET)
 
-function authenticationToken(req, res, next){
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if(token == null) return res.sendStatus(401);
+  res.writeHead(200, {"Authorization":access_token})
+  res.end("done")
+})
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
-    if(err) return res.sendStatus(403)
+app.get('/api/profile', authenticateToken, (req, res)=>{
+  res.send('welcome')
+})
+
+
+
+app.post('/api/login', (req, res, next) =>{
+  passport.authenticate('local', (err, user, info) => {
+    if (err){ 
+      return next(err);
+    }
+    if (!user){
+      return res.status(400).send([user, "!cannot log in", info])
+    }
+    req.login(user, (err) => {
+      res.send(req.session.user)
+    })
+  })(req,res, next)
+})
+
+app.post('/api/register', async (req, res)=>{
+  let name = "Hema";
+  let email = req.body.email;
+  let password = req.body.password;
+
+  try{
+    const hashedPassword = await bcrypt.hash(password, 10)
+    users.push({
+      id: Date.now().toString(),
+      name:name,
+      email:email,
+      password:hashedPassword
+    })
+    res.send(200)
+  } catch(e){
+    res.redirect('/register')
+  }
+  console.log(users)
+})
+
+
+//app.post('/api/login', checkNotAuthenticated, 
+//passport.authenticate('local',{
+//  successRedirect:'/',
+//  failureRedirect:'/login',
+//  failureFlash: true
+
+//}));
+
+function checkAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return res.redirect('/login')
+  }
+  next()
+}
+
+function checkNotAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return res.redirect('/login')
+  }
+  next()
+}
+
+function authenticateToken(req, res, next){
+  const autheader  = req.headers['authorization'];
+  const token = autheader && autheader.split(' ')[1]
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
+    if (err) return res.sendStatus(403)
     req.user = user
     next()
-  });
+  })
 
 }
 

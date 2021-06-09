@@ -110,7 +110,16 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Login',
           to: '/login'
-        }
+        },
+		{
+          icon: 'mdi-chart-bubble',
+          title: 'Profile',
+          to: '/profile'
+        },
+		{
+			title: 'Register',
+			to: '/register'
+		}
       ],
       miniVariant: false,
       right: true,

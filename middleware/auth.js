@@ -9,5 +9,11 @@ export default {
         password: payload.password
 
     })
+  },
+  Register (payload) {
+    return API().post('api/register', {
+      email: payload.email,
+      password: payload.password
+    })
   }
 }
