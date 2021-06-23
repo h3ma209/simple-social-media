@@ -21,6 +21,7 @@ module.exports = {
 		'indent': [0, 'tab'],
 		'no-tabs': 'off',
     'object-shorthand':0,
-    'vue/require-prop-type-constructor':0
+    'vue/require-prop-type-constructor':0,
+    "no-unused-vars":0,
   }
 }

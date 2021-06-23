@@ -73,13 +73,13 @@ import auth from '@/middleware/auth'
 
       data: () => ({
           valid: true,
-          email: '',
+          email: 's@s.mail.com',
           emailRules: [
               v => !!v || 'Email is required',
               v => (v && v.length >= 4) || 'Email must be longer',
               v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
           ],
-          password: '',
+          password: 'shko1234',
           passRules: [
               v => !!v || 'Password is required',
               v => (v && v.length >= 1) || 'Password must be longer than 1'
@@ -100,7 +100,10 @@ import auth from '@/middleware/auth'
                     password: this.password
                   })
 
-                  console.log(resp.data)
+				document.cookie = JSON.stringify({
+					accessToken: resp.data.access_token
+				})
+                console.log(resp)
               } catch (error) {
                 console.log(error)
               }

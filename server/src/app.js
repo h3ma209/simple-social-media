@@ -42,19 +42,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-app.post('/api/authme',(req,res)=>{
-  let username = req.body.name;
-  let access_token = "BEARER "+jwt.sign({name: username}, process.env.ACCESS_TOKEN_SECRET)
-
-  res.writeHead(200, {"Authorization":access_token})
-  res.end("done")
-})
-
-app.get('/api/profile', authenticateToken, (req, res)=>{
-  res.send('welcome')
-})
-
-
 
 app.post('/api/login', (req, res, next) =>{
   passport.authenticate('local', (err, user, info) => {
@@ -113,18 +100,7 @@ function checkNotAuthenticated(req, res, next){
   next()
 }
 
-function authenticateToken(req, res, next){
-  const autheader  = req.headers['authorization'];
-  const token = autheader && autheader.split(' ')[1]
-  if (token == null) return res.sendStatus(401)
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
-    if (err) return res.sendStatus(403)
-    req.user = user
-    next()
-  })
-
-}
 
 app.listen(8081);
 

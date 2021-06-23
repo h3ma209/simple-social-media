@@ -1,0 +1,44 @@
+### Login
+POST http://localhost:4000/api/authme
+Content-Type: application/json
+
+{
+    "name":"hema"
+}
+
+
+
+### go to profile
+GET http://localhost:4000/api/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaGVtYSIsImlhdCI6MTYyNDE4OTIyNywiZXhwIjoxNjI0MTg5MjQ3fQ.vYr9jVq5LE-LGy9bBvAxDnWIGZe2D25pfM9YEk4A-8U
+
+
+
+
+
+
+### refresh token
+POST http://localhost:4000/api/token
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaGVtYSIsImlhdCI6MTYyMzMzNzUwN30.7FoK2jQtob9d-UjXnfFehhJHOnSYRUCEs78oC8F9Oqo"
+}
+
+### log out
+DELETE http://localhost:4000/api/logout
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaGVtYSIsImlhdCI6MTYyMzMzNzIzNn0.6FJdAz4WBo_ieZIXhlHwkc4-nUTk-9F177e7AxUrS2g"
+}
+
+
+### register
+POST http://localhost:8081/api/register
+Content-Type: application/json
+
+{
+    "email": "hema@mail.com",
+    "password": "12345"
+}
