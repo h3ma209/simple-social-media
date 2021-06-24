@@ -1,69 +1,63 @@
 <template>
-	<v-app light>
-		<v-main>
-			<v-container class="fill-height" fluid>
-				<v-row align="center" justify="center">
-					<v-col cols="12" sm="8" md="5">
-						<v-card light>
-							<v-row>
-								<v-col>
-									<v-card-text class="mt-5 mb-5 pa-7">
-										<h1
+	<v-row align="center" justify="center">
+		<v-col cols="12" sm="8" md="5">
+			<v-card light>
+				<v-row>
+					<v-col>
+						<v-card-text class="mt-5 mb-5 pa-7">
+							<h1
 
-											class="mb-6 text-center display-2 light-blue--text text--light-blue "
-										>
-											Login
-										</h1>
+								class="mb-6 text-center display-2 light-blue--text text--light-blue "
+							>
+								Login
+							</h1>
 
-										<v-form
-											ref="form"
-											v-model="valid"
-											lazy-validation>
-											<v-text-field
-												v-model="email"
-												label="Email"
-												name="Email"
-												prepend-icon="email"
-												type="text"
-												color="light-blue "
-												:rules="emailRules"
-												value="w@w.com"
-											/>
+							<v-form
+								ref="form"
+								v-model="valid"
+								lazy-validation>
+								<v-text-field
+									v-model="email"
+									label="Email"
+									name="Email"
+									prepend-icon="email"
+									type="text"
+									color="light-blue "
+									:rules="emailRules"
+									value="w@w.com"
+								/>
 
-											<v-text-field
-												id="password"
-												v-model="password"
-												label="Password"
-												name="password"
-												prepend-icon="lock"
-												type="password"
-												color="light-blue "
-												:rules="passRules"
-												value="w"
-											/>
-										</v-form>
-										<h3 class="text-center mt-3">
-											Forgot your password ?
-										</h3>
-										<div class="text-center mt-5">
-											<v-btn
-												rounded
-												color="light-blue "
-												dark
-												:disabled="!valid"
-												@click="validate">
-												Login
-											</v-btn>
-										</div>
-									</v-card-text>
-								</v-col>
-							</v-row>
-						</v-card>
+								<v-text-field
+									id="password"
+									v-model="password"
+									label="Password"
+									name="password"
+									prepend-icon="lock"
+									type="password"
+									color="light-blue "
+									:rules="passRules"
+									value="w"
+								/>
+							</v-form>
+							<h3 class="text-center mt-3">
+								Forgot your password ?
+							</h3>
+							<div class="text-center mt-5">
+								<v-btn
+									rounded
+									color="light-blue "
+									dark
+									:disabled="!valid"
+									@click="validate">
+									Login
+								</v-btn>
+							</div>
+						</v-card-text>
 					</v-col>
 				</v-row>
-			</v-container>
-		</v-main>
-	</v-app>
+			</v-card>
+		</v-col>
+	</v-row>
 </template>
 
 <script>
