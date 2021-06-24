@@ -1,5 +1,5 @@
 <template>
-	<v-app light>
+	<v-app light style="height:auto !important">
 		<v-navigation-drawer
 			v-model="drawer"
 			:mini-variant="miniVariant"
